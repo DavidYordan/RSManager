@@ -2,8 +2,6 @@ package com.rsmanager.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 
 import java.time.LocalDateTime;
 
@@ -19,7 +17,6 @@ import lombok.Setter;
 public class SysUser {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long userId;
 
