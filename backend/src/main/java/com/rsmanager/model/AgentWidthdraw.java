@@ -14,7 +14,7 @@ import lombok.Setter;
 @Table(name = "agent_widthdraw") // 对应表名
 @Getter
 @Setter
-public class AgentWithdraw {
+public class AgentWidthdraw {
 
     @Id
     @Column(name = "id")

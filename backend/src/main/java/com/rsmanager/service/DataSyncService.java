@@ -45,7 +45,7 @@ public class DataSyncService {
     private LocalAgentMoneyRepository localAgentMoneyRepository;
 
     @Autowired
-    private LocalAgentWithdrawRepository localAgentWithdrawRepository;
+    private LocalAgentWidthdrawRepository localAgentWidthdrawRepository;
 
     @Autowired
     private LocalCashOutRepository localCashOutRepository;
@@ -76,7 +76,7 @@ public class DataSyncService {
     private RemoteAgentMoneyRepository remoteAgentMoneyRepository;
 
     @Autowired
-    private RemoteAgentWithdrawRepository remoteAgentWithdrawRepository;
+    private RemoteAgentWidthdrawRepository remoteAgentWidthdrawRepository;
 
     @Autowired
     private RemoteCashOutRepository remoteCashOutRepository;
@@ -122,8 +122,8 @@ public class DataSyncService {
             // 5. 同步 AgentMoney 数据
             syncAgentMoney();
             
-            // 6. 同步 AgentWithdraw 数据
-            syncAgentWithdraw();
+            // 6. 同步 AgentWidthdraw 数据
+            syncAgentWidthdraw();
 
             // 7. 同步 CashOut 数据
             syncCashOut();
@@ -438,34 +438,34 @@ public class DataSyncService {
     }
 
     /**
-     * 同步 AgentWithdraw 数据
+     * 同步 AgentWidthdraw 数据
      */
-    private void syncAgentWithdraw() {
+    private void syncAgentWidthdraw() {
         logger.info("开始同步 AgentMoney 数据...");
 
         try {
             // 从本地数据库获取最新的 updateTime
-            LocalDateTime lastUpdateTime = localAgentWithdrawRepository.findMaxUpdateTime();
+            LocalDateTime lastUpdateTime = localAgentWidthdrawRepository.findMaxUpdateTime();
             if (lastUpdateTime == null) {
                 lastUpdateTime = LocalDateTime.of(1970, 1, 1, 0, 0);  // 默认时间
-                logger.warn("AgentWithdraw 本地数据库的最新 upateTime 为空，设置为默认值: {}", lastUpdateTime);
+                logger.warn("AgentWidthdraw 本地数据库的最新 upateTime 为空，设置为默认值: {}", lastUpdateTime);
             } else {
-                logger.debug("AgentWithdraw 本地数据库的最新 upateTime: {}", lastUpdateTime);
+                logger.debug("AgentWidthdraw 本地数据库的最新 upateTime: {}", lastUpdateTime);
             }
 
-            // 从远程数据库查询比 lastUpdateTime 更新的 AgentWithdraw
-            List<AgentWithdraw> remoteAgentWithdraws = remoteAgentWithdrawRepository.findByUpdateTimeAfter(lastUpdateTime);
-            logger.debug("从远程数据库查询到的 AgentWithdraw 更新数量: {}", remoteAgentWithdraws.size());
+            // 从远程数据库查询比 lastUpdateTime 更新的 AgentWidthdraw
+            List<AgentWidthdraw> remoteAgentWidthdraws = remoteAgentWidthdrawRepository.findByUpdateTimeAfter(lastUpdateTime);
+            logger.debug("从远程数据库查询到的 AgentWidthdraw 更新数量: {}", remoteAgentWidthdraws.size());
 
-            if (!remoteAgentWithdraws.isEmpty()) {
+            if (!remoteAgentWidthdraws.isEmpty()) {
                 // 保存到本地数据库
-                localAgentWithdrawRepository.saveAll(remoteAgentWithdraws);
-                logger.info("已保存 {} 条 AgentWithdraw 记录到本地数据库", remoteAgentWithdraws.size());
+                localAgentWidthdrawRepository.saveAll(remoteAgentWidthdraws);
+                logger.info("已保存 {} 条 AgentWidthdraw 记录到本地数据库", remoteAgentWidthdraws.size());
             } else {
-                logger.info("没有 AgentWithdraw 需要同步的数据。");
+                logger.info("没有 AgentWidthdraw 需要同步的数据。");
             }
         } catch (Exception e) {
-            logger.error("同步 AgentWithdraw 数据时发生异常: ", e);
+            logger.error("同步 AgentWidthdraw 数据时发生异常: ", e);
         }
 
     }

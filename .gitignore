@@ -4,3 +4,4 @@ target/
 test/
 *.properties
 *.sql
+count_rows.py
