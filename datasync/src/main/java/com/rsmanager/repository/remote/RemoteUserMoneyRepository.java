@@ -14,5 +14,5 @@ public interface RemoteUserMoneyRepository extends JpaRepository<UserMoney, Long
      * @param userIds 用户ID列表
      * @return 满足条件的 UserMoney 列表
      */
-    List<UserMoney> findByUserIdIn(List<Long> userIds);
+    List<UserMoney> findByUserIdIn(List<Integer> userIds);
 }

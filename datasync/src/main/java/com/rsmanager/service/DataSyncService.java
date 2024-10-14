@@ -1,4 +1,3 @@
-// DataSyncService.java
 package com.rsmanager.service;
 
 import com.rsmanager.model.*;
@@ -11,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,6 +41,15 @@ public class DataSyncService {
     @Autowired
     private LocalInviteMoneyRepository localInviteMoneyRepository;
 
+    @Autowired
+    private LocalAgentMoneyRepository localAgentMoneyRepository;
+
+    @Autowired
+    private LocalAgentWithdrawRepository localAgentWithdrawRepository;
+
+    @Autowired
+    private LocalCashOutRepository localCashOutRepository;
+
     // 远程 Repository 接口
     @Autowired
     private RemoteTbUserRepository remoteTbUserRepository;
@@ -63,6 +72,15 @@ public class DataSyncService {
     @Autowired
     private RemoteInviteMoneyRepository remoteInviteMoneyRepository;
 
+    @Autowired
+    private RemoteAgentMoneyRepository remoteAgentMoneyRepository;
+
+    @Autowired
+    private RemoteAgentWithdrawRepository remoteAgentWithdrawRepository;
+
+    @Autowired
+    private RemoteCashOutRepository remoteCashOutRepository;
+
     /**
      * 每隔 30 分钟执行一次同步任务
      */
@@ -73,7 +91,7 @@ public class DataSyncService {
 
         try {
             // 1. 同步 TbUser 数据
-            List<Long> tbUserIds = syncTbUser();
+            List<Integer> tbUserIds = syncTbUser();
             if (!tbUserIds.isEmpty()) {
                 // 同步 UserIntegral 和 UserMoney
                 syncUserIntegral(tbUserIds);
@@ -81,25 +99,34 @@ public class DataSyncService {
             }
 
             // 2. 同步 UserIntegralDetails 数据
-            List<Long> userIntegralDetailUserIds = syncUserIntegralDetails();
+            List<Integer> userIntegralDetailUserIds = syncUserIntegralDetails();
             if (!userIntegralDetailUserIds.isEmpty()) {
                 // 同步 UserIntegral
                 syncUserIntegral(userIntegralDetailUserIds);
             }
 
             // 3. 同步 UserMoneyDetails 数据
-            List<Long> userMoneyDetailUserIds = syncUserMoneyDetails();
+            List<Integer> userMoneyDetailUserIds = syncUserMoneyDetails();
             if (!userMoneyDetailUserIds.isEmpty()) {
                 // 同步 UserMoney
                 syncUserMoney(userMoneyDetailUserIds);
             }
 
             // 4. 同步 Invite 数据
-            List<Long> inviteUserIds = syncInvite();
+            List<Integer> inviteUserIds = syncInvite();
             if (!inviteUserIds.isEmpty()) {
                 // 同步 InviteMoney
                 syncInviteMoney(inviteUserIds);
             }
+
+            // 5. 同步 AgentMoney 数据
+            syncAgentMoney();
+            
+            // 6. 同步 AgentWidthdraw 数据
+            syncAgentWidthdraw();
+
+            // 7. 同步 CashOut 数据
+            syncCashOut();
 
             logger.info("所有数据同步完成。");
         } catch (Exception e) {
@@ -111,10 +138,10 @@ public class DataSyncService {
      * 同步 TbUser 数据
      * @return 同步的 user_id 列表
      */
-    private List<Long> syncTbUser() {
+    private List<Integer> syncTbUser() {
         logger.info("开始同步 TbUser 数据...");
 
-        List<Long> userIds = Collections.emptyList();
+        List<Integer> userIds = Collections.emptyList();
 
         try {
             // 从本地数据库获取最新的 updateTime
@@ -139,6 +166,7 @@ public class DataSyncService {
                 userIds = updatedRemoteTbUsers.stream()
                         .map(TbUser::getUserId)
                         .filter(Objects::nonNull)
+                        .map(Long::intValue)
                         .collect(Collectors.toSet())  // 去重
                         .stream()
                         .collect(Collectors.toList());
@@ -158,7 +186,7 @@ public class DataSyncService {
      * 同步 UserIntegral 数据
      * @param userIds 需要同步的 user_id 列表
      */
-    private void syncUserIntegral(List<Long> userIds) {
+    private void syncUserIntegral(List<Integer> userIds) {
         logger.info("开始同步 UserIntegral 数据，涉及的 user_id 数量: {}", userIds.size());
 
         try {
@@ -182,7 +210,7 @@ public class DataSyncService {
      * 同步 UserMoney 数据
      * @param userIds 需要同步的 user_id 列表
      */
-    private void syncUserMoney(List<Long> userIds) {
+    private void syncUserMoney(List<Integer> userIds) {
         logger.info("开始同步 UserMoney 数据，涉及的 user_id 数量: {}", userIds.size());
 
         try {
@@ -206,10 +234,10 @@ public class DataSyncService {
      * 同步 UserIntegralDetails 数据
      * @return 同步的 user_id 列表
      */
-    private List<Long> syncUserIntegralDetails() {
+    private List<Integer> syncUserIntegralDetails() {
         logger.info("开始同步 UserIntegralDetails 数据...");
 
-        List<Long> userIds = Collections.emptyList();
+        List<Integer> userIds = Collections.emptyList();
 
         try {
             // 从本地数据库获取最新的 createTime
@@ -253,10 +281,10 @@ public class DataSyncService {
      * 同步 UserMoneyDetails 数据
      * @return 同步的 user_id 列表
      */
-    private List<Long> syncUserMoneyDetails() {
+    private List<Integer> syncUserMoneyDetails() {
         logger.info("开始同步 UserMoneyDetails 数据...");
 
-        Set<Long> userIds = new HashSet<>();
+        Set<Integer> userIds = new HashSet<>();
 
         try {
             // 从本地数据库获取最新的 createTime
@@ -283,7 +311,7 @@ public class DataSyncService {
                         .filter(Objects::nonNull)
                         .collect(Collectors.toSet());
 
-                Set<Long> byUserIds = updatedRemoteDetails.stream()
+                Set<Integer> byUserIds = updatedRemoteDetails.stream()
                         .map(UserMoneyDetails::getByUserId)
                         .filter(Objects::nonNull)
                         .collect(Collectors.toSet());
@@ -305,10 +333,10 @@ public class DataSyncService {
      * 同步 Invite 数据
      * @return 同步的 user_id 列表
      */
-    private List<Long> syncInvite() {
+    private List<Integer> syncInvite() {
         logger.info("开始同步 Invite 数据...");
 
-        Set<Long> userIds = new HashSet<>();
+        Set<Integer> userIds = new HashSet<>();
 
         try {
             // 从本地数据库获取最新的 createTime
@@ -335,7 +363,7 @@ public class DataSyncService {
                         .filter(Objects::nonNull)
                         .collect(Collectors.toSet());
 
-                Set<Long> inviteeUserIds = updatedRemoteInvites.stream()
+                Set<Integer> inviteeUserIds = updatedRemoteInvites.stream()
                         .map(Invite::getInviteeUserId)
                         .filter(Objects::nonNull)
                         .collect(Collectors.toSet());
@@ -357,7 +385,7 @@ public class DataSyncService {
      * 同步 InviteMoney 数据
      * @param userIds 需要同步的 user_id 列表
      */
-    private void syncInviteMoney(List<Long> userIds) {
+    private void syncInviteMoney(List<Integer> userIds) {
         logger.info("开始同步 InviteMoney 数据，涉及的 user_id 数量: {}", userIds.size());
 
         try {
@@ -375,5 +403,83 @@ public class DataSyncService {
         } catch (Exception e) {
             logger.error("同步 InviteMoney 数据时发生异常: ", e);
         }
+    }
+
+    /**
+     * 同步 AgentMoney 数据
+     * @return 同步的 user_id 列表
+     */
+    private void syncAgentMoney() {
+        logger.info("开始同步 AgentMoney 数据...");
+
+        try {
+            // 从本地数据库获取最新的 createTime
+            LocalDateTime lastCreateTime = localAgentMoneyRepository.findMaxCreateTime();
+            if (lastCreateTime == null) {
+                lastCreateTime = LocalDateTime.of(1970, 1, 1, 0, 0);  // 默认时间
+                logger.warn("AgentMoney 本地数据库的最新 createTime 为空，设置为默认值: {}", lastCreateTime);
+            } else {
+                logger.debug("AgentMoney 本地数据库的最新 createTime: {}", lastCreateTime);
+            }
+
+            // 从远程数据库查询比 lastCreateTime 更新的 AgentMoney
+            List<AgentMoney> updatedRemoteAgentMoneys = remoteAgentMoneyRepository.findByCreateTimeAfter(lastCreateTime);
+            logger.debug("从远程数据库查询到的 AgentMoney 更新数量: {}", updatedRemoteAgentMoneys.size());
+
+        } catch (Exception e) {
+            logger.error("同步 AgentMoney 数据时发生异常: ", e);
+        }
+    }
+
+    /**
+     * 同步 AgentWidthdraw 数据
+     */
+    private void syncAgentWidthdraw() {
+        logger.info("开始同步 AgentMoney 数据...");
+
+        try {
+            // 从本地数据库获取最新的 updateTime
+            LocalDateTime lastUpdateTime = localAgentWithdrawRepository.findMaxUpdateTime();
+            if (lastUpdateTime == null) {
+                lastUpdateTime = LocalDateTime.of(1970, 1, 1, 0, 0);  // 默认时间
+                logger.warn("AgentWidthdraw 本地数据库的最新 upateTime 为空，设置为默认值: {}", lastUpdateTime);
+            } else {
+                logger.debug("AgentWidthdraw 本地数据库的最新 upateTime: {}", lastUpdateTime);
+            }
+
+            // 从远程数据库查询比 lastUpdateTime 更新的 AgentWidthdraw
+            List<AgentWidthdraw> updatedRemoteAgentWidthdraws = remoteAgentWithdrawRepository.findByUpdateTimeAfter(lastUpdateTime);
+            logger.debug("从远程数据库查询到的 AgentWidthdraw 更新数量: {}", updatedRemoteAgentWidthdraws.size());
+
+        } catch (Exception e) {
+            logger.error("同步 AgentWidthdraw 数据时发生异常: ", e);
+        }
+
+    }
+
+    /**
+     * 同步 CashOut 数据
+     */
+    private void syncCashOut() {
+        logger.info("开始同步 AgentMoney 数据...");
+
+        try {
+            // 从本地数据库获取最新的 createAt
+            String lastCreateAt = localCashOutRepository.findMaxCreateAt();
+            if (lastCreateAt == null) {
+                lastCreateAt = "1970-01-01 00:00:00";  // 默认时间
+                logger.warn("CashOut 本地数据库的最新 createAt 为空，设置为默认值: {}", lastCreateAt);
+            } else {
+                logger.debug("CashOut 本地数据库的最新 createAt: {}", lastCreateAt);
+            }
+
+            // 从远程数据库查询比 lastCreateAt 更新的 CashOut
+            List<CashOut> updatedRemoteCashOut = remoteCashOutRepository.findByCreateAtAfter(lastCreateAt);
+            logger.debug("从远程数据库查询到的 CashOut 更新数量: {}", updatedRemoteCashOut.size());
+
+        } catch (Exception e) {
+            logger.error("同步 CashOut 数据时发生异常: ", e);
+        }
+
     }
 }

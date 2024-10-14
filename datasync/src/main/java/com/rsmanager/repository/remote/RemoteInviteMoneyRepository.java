@@ -14,5 +14,5 @@ public interface RemoteInviteMoneyRepository extends JpaRepository<InviteMoney, 
      * @param userIds 用户ID列表
      * @return 满足条件的 InviteMoney 列表
      */
-    List<InviteMoney> findByUserIdIn(List<Long> userIds);
+    List<InviteMoney> findByUserIdIn(List<Integer> userIds);
 }

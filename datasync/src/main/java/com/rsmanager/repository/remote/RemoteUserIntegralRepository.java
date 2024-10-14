@@ -14,5 +14,5 @@ public interface RemoteUserIntegralRepository extends JpaRepository<UserIntegral
      * @param userIds 用户ID列表
      * @return 满足条件的 UserIntegral 列表
      */
-    List<UserIntegral> findByUserIdIn(List<Long> userIds);
+    List<UserIntegral> findByUserIdIn(List<Integer> userIds);
 }
