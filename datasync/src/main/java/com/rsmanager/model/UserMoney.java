@@ -6,11 +6,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "user_money") // 对应表名
+@Table(name = "user_money", uniqueConstraints = @UniqueConstraint(columnNames = "user_id")) // 添加唯一约束
 @Getter
 @Setter
 public class UserMoney {
@@ -23,6 +24,6 @@ public class UserMoney {
     @Column(name = "money")
     private Double money;
 
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false, unique = true)
     private Integer userId;
 }

@@ -16,7 +16,7 @@ import lombok.Setter;
 @Table(name = "agent_widthdraw") // 对应表名
 @Getter
 @Setter
-public class AgentWidthdraw {
+public class AgentWithdraw {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

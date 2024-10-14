@@ -1,4 +1,4 @@
-package com.rsmanager.service;
+package com.rsmanager.service; 
 
 import com.rsmanager.model.*;
 import com.rsmanager.repository.local.*;
@@ -122,8 +122,8 @@ public class DataSyncService {
             // 5. 同步 AgentMoney 数据
             syncAgentMoney();
             
-            // 6. 同步 AgentWidthdraw 数据
-            syncAgentWidthdraw();
+            // 6. 同步 AgentWithdraw 数据
+            syncAgentWithdraw();
 
             // 7. 同步 CashOut 数据
             syncCashOut();
@@ -407,7 +407,6 @@ public class DataSyncService {
 
     /**
      * 同步 AgentMoney 数据
-     * @return 同步的 user_id 列表
      */
     private void syncAgentMoney() {
         logger.info("开始同步 AgentMoney 数据...");
@@ -423,18 +422,25 @@ public class DataSyncService {
             }
 
             // 从远程数据库查询比 lastCreateTime 更新的 AgentMoney
-            List<AgentMoney> updatedRemoteAgentMoneys = remoteAgentMoneyRepository.findByCreateTimeAfter(lastCreateTime);
-            logger.debug("从远程数据库查询到的 AgentMoney 更新数量: {}", updatedRemoteAgentMoneys.size());
+            List<AgentMoney> remoteAgentMoneys = remoteAgentMoneyRepository.findByCreateTimeAfter(lastCreateTime);
+            logger.debug("从远程数据库查询到的 AgentMoney 更新数量: {}", remoteAgentMoneys.size());
 
+            if (!remoteAgentMoneys.isEmpty()) {
+                // 保存到本地数据库
+                localAgentMoneyRepository.saveAll(remoteAgentMoneys);
+                logger.info("已保存 {} 条 AgentMoney 记录到本地数据库", remoteAgentMoneys.size());
+            } else {
+                logger.info("没有 AgentMoney 需要同步的数据。");
+            }
         } catch (Exception e) {
             logger.error("同步 AgentMoney 数据时发生异常: ", e);
         }
     }
 
     /**
-     * 同步 AgentWidthdraw 数据
+     * 同步 AgentWithdraw 数据
      */
-    private void syncAgentWidthdraw() {
+    private void syncAgentWithdraw() {
         logger.info("开始同步 AgentMoney 数据...");
 
         try {
@@ -442,17 +448,24 @@ public class DataSyncService {
             LocalDateTime lastUpdateTime = localAgentWithdrawRepository.findMaxUpdateTime();
             if (lastUpdateTime == null) {
                 lastUpdateTime = LocalDateTime.of(1970, 1, 1, 0, 0);  // 默认时间
-                logger.warn("AgentWidthdraw 本地数据库的最新 upateTime 为空，设置为默认值: {}", lastUpdateTime);
+                logger.warn("AgentWithdraw 本地数据库的最新 upateTime 为空，设置为默认值: {}", lastUpdateTime);
             } else {
-                logger.debug("AgentWidthdraw 本地数据库的最新 upateTime: {}", lastUpdateTime);
+                logger.debug("AgentWithdraw 本地数据库的最新 upateTime: {}", lastUpdateTime);
             }
 
-            // 从远程数据库查询比 lastUpdateTime 更新的 AgentWidthdraw
-            List<AgentWidthdraw> updatedRemoteAgentWidthdraws = remoteAgentWithdrawRepository.findByUpdateTimeAfter(lastUpdateTime);
-            logger.debug("从远程数据库查询到的 AgentWidthdraw 更新数量: {}", updatedRemoteAgentWidthdraws.size());
+            // 从远程数据库查询比 lastUpdateTime 更新的 AgentWithdraw
+            List<AgentWithdraw> remoteAgentWithdraws = remoteAgentWithdrawRepository.findByUpdateTimeAfter(lastUpdateTime);
+            logger.debug("从远程数据库查询到的 AgentWithdraw 更新数量: {}", remoteAgentWithdraws.size());
 
+            if (!remoteAgentWithdraws.isEmpty()) {
+                // 保存到本地数据库
+                localAgentWithdrawRepository.saveAll(remoteAgentWithdraws);
+                logger.info("已保存 {} 条 AgentWithdraw 记录到本地数据库", remoteAgentWithdraws.size());
+            } else {
+                logger.info("没有 AgentWithdraw 需要同步的数据。");
+            }
         } catch (Exception e) {
-            logger.error("同步 AgentWidthdraw 数据时发生异常: ", e);
+            logger.error("同步 AgentWithdraw 数据时发生异常: ", e);
         }
 
     }
@@ -474,9 +487,16 @@ public class DataSyncService {
             }
 
             // 从远程数据库查询比 lastCreateAt 更新的 CashOut
-            List<CashOut> updatedRemoteCashOut = remoteCashOutRepository.findByCreateAtAfter(lastCreateAt);
-            logger.debug("从远程数据库查询到的 CashOut 更新数量: {}", updatedRemoteCashOut.size());
+            List<CashOut> remoteCashOut = remoteCashOutRepository.findByCreateAtAfter(lastCreateAt);
+            logger.debug("从远程数据库查询到的 CashOut 更新数量: {}", remoteCashOut.size());
 
+            if (!remoteCashOut.isEmpty()) {
+                // 保存到本地数据库
+                localCashOutRepository.saveAll(remoteCashOut);
+                logger.info("已保存 {} 条 CashOut 记录到本地数据库", remoteCashOut.size());
+            } else {
+                logger.info("没有 CashOut 需要同步的数据。");
+            }
         } catch (Exception e) {
             logger.error("同步 CashOut 数据时发生异常: ", e);
         }
