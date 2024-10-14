@@ -1,4 +1,4 @@
-package com.rsmanager.service; 
+package com.rsmanager.service;
 
 import com.rsmanager.model.*;
 import com.rsmanager.repository.local.*;
