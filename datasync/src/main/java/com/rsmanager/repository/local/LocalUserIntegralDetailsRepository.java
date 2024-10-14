@@ -1,0 +1,14 @@
+package com.rsmanager.repository.local;
+
+import com.rsmanager.model.UserIntegralDetails;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface LocalUserIntegralDetailsRepository extends JpaRepository<UserIntegralDetails, Integer> {
+
+    // 查询本地数据库中最新的 createTime
+    @Query("SELECT MAX(u.createTime) FROM UserIntegralDetails u")
+    String findMaxCreateTime();
+}

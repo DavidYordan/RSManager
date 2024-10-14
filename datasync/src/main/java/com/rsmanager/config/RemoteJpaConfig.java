@@ -1,0 +1,40 @@
+package com.rsmanager.config;
+
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import javax.sql.DataSource;
+
+@Configuration
+@EnableTransactionManagement
+@EnableJpaRepositories(
+    basePackages = "com.rsmanager.repository.remote",  // 远程数据库的 Repository 包路径
+    entityManagerFactoryRef = "remoteEntityManagerFactory",
+    transactionManagerRef = "remoteTransactionManager"
+)
+public class RemoteJpaConfig {
+
+    @Bean(name = "remoteEntityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean remoteEntityManagerFactory(
+            @Qualifier("remoteDataSource") DataSource remoteDataSource,
+            EntityManagerFactoryBuilder builder) {
+        return builder
+                .dataSource(remoteDataSource)
+                .packages("com.rsmanager.model")  // 实体类的包路径
+                .persistenceUnit("remote")
+                .build();
+    }
+
+    @Bean(name = "remoteTransactionManager")
+    public PlatformTransactionManager remoteTransactionManager(
+            @Qualifier("remoteEntityManagerFactory") LocalContainerEntityManagerFactoryBean remoteEntityManagerFactory) {
+        return new JpaTransactionManager(remoteEntityManagerFactory.getObject());
+    }
+}
