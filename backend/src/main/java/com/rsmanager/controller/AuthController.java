@@ -1,32 +1,52 @@
 package com.rsmanager.controller;
 
+import com.rsmanager.security.JwtTokenUtil;
+import com.rsmanager.security.CustomUserDetails;
+import com.rsmanager.model.BackendUser;
+import com.rsmanager.repository.local.BackendUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.ui.Model;
+import org.springframework.security.authentication.*;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.*;
 
-@Controller
+@RestController
 public class AuthController {
 
     @Autowired
-    private CaptchaService captchaService;
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private BackendUserRepository backendUserRepository;
 
     @PostMapping("/login")
-    public String login(@RequestParam("username") String username,
-                        @RequestParam("password") String password,
-                        @RequestParam("captcha") String captchaInput,
-                        @RequestParam("captchaToken") String captchaToken,
-                        Model model) {
-        boolean isCaptchaValid = captchaService.validateCaptcha(captchaToken, captchaInput);
-        if (!isCaptchaValid) {
-            model.addAttribute("error", "验证码验证失败，请重试。");
-            return "login";
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+
+        try {
+            // 认证用户
+            Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                    loginRequest.getUsername(),
+                    loginRequest.getPassword()
+                )
+            );
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            // 生成令牌
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            String token = jwtTokenUtil.generateToken(userDetails);
+
+            // 返回令牌和用户角色
+            return ResponseEntity.ok(new LoginResponse(token, userDetails.getUser().getRole().getName()));
+
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("用户名或密码错误");
         }
-
-        // 进行用户认证逻辑（使用 Spring Security）
-        // 可以触发 Spring Security 的认证流程或自定义认证逻辑
-
-        return "redirect:/home";
     }
 }

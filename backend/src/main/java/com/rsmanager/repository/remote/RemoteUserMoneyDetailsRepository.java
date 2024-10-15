@@ -6,9 +6,17 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * 远程数据库的 UserMoneyDetails Repository
+ */
 @Repository
 public interface RemoteUserMoneyDetailsRepository extends JpaRepository<UserMoneyDetails, Integer> {
 
-    // 查询远程数据库中所有在指定时间之后更新的记录
-    List<UserMoneyDetails> findByCreateTimeAfter(String createTime);
+    /**
+     * 查询远程数据库中所有 id 大于指定值的记录
+     *
+     * @param id 指定的最小 id
+     * @return 符合条件的 UserMoneyDetails 列表
+     */
+    List<UserMoneyDetails> findByIdGreaterThan(Integer id);
 }

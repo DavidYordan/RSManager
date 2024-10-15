@@ -1,0 +1,46 @@
+{
+    "app": {
+      "title": "企業管理平台"
+    },
+    "breadcrumb": {
+      "home": "首頁"
+    },
+    "dashboard": {
+      "welcome": "歡迎，{name}",
+      "adminDashboard": "這是管理員的儀表板"
+    },
+    "header": {
+      "logout": "退出登入"
+    },
+    "login": {
+      "username": "用戶名",
+      "password": "密碼",
+      "login": "登入",
+      "loginFailed": "登入失敗"
+    },
+    "pageTitle": {
+      "login": "登入 - 企業管理平台",
+      "dashboard": "儀表板 - 企業管理平台",
+      "userManagement": "用戶管理 - 企業管理平台"
+    },
+    "sidebar": {
+      "dashboard": "儀表板",
+      "userManagement": "用戶管理"
+    },
+    "unauthorized": {
+      "message": "您沒有權限訪問此頁面。"
+    },
+    "userManagement": {
+      "addUser": "添加用戶",
+      "username": "用戶名",
+      "role": "角色",
+      "actions": "操作",
+      "edit": "編輯",
+      "delete": "刪除",
+      "userInfo": "用戶信息",
+      "save": "保存",
+      "cancel": "取消",
+      "admin": "管理員"
+    }
+  }
+  

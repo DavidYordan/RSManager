@@ -1,0 +1,46 @@
+{
+    "app": {
+      "title": "Enterprise Management Platform"
+    },
+    "breadcrumb": {
+      "home": "Home"
+    },
+    "dashboard": {
+      "welcome": "Welcome, {name}",
+      "adminDashboard": "This is the admin dashboard"
+    },
+    "header": {
+      "logout": "Logout"
+    },
+    "login": {
+      "username": "Username",
+      "password": "Password",
+      "login": "Login",
+      "loginFailed": "Login failed"
+    },
+    "pageTitle": {
+      "login": "Login - Enterprise Management Platform",
+      "dashboard": "Dashboard - Enterprise Management Platform",
+      "userManagement": "User Management - Enterprise Management Platform"
+    },
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "userManagement": "User Management"
+    },
+    "unauthorized": {
+      "message": "You do not have permission to access this page."
+    },
+    "userManagement": {
+      "addUser": "Add User",
+      "username": "Username",
+      "role": "Role",
+      "actions": "Actions",
+      "edit": "Edit",
+      "delete": "Delete",
+      "userInfo": "User Information",
+      "save": "Save",
+      "cancel": "Cancel",
+      "admin": "Administrator"
+    }
+  }
+  

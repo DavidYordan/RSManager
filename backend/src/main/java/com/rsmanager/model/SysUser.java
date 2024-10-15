@@ -54,7 +54,7 @@ public class SysUser {
     private Double agentCash;
 
     @Column(name = "agent_withdraw_cash")
-    private Double agentWidthdrawCash;
+    private Double agentWithdrawCash;
 
     @Column(name = "agent0_money")
     private Double agent0Money;

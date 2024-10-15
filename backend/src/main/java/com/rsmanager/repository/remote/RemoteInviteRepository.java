@@ -6,9 +6,17 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * 远程数据库的 Invite Repository
+ */
 @Repository
 public interface RemoteInviteRepository extends JpaRepository<Invite, Integer> {
 
-    // 查询远程数据库中所有在指定时间之后更新的记录
-    List<Invite> findByCreateTimeAfter(String createTime);
+    /**
+     * 查询远程数据库中所有 id 大于指定值的记录
+     *
+     * @param id 指定的最小 id
+     * @return 符合条件的 Invite 列表
+     */
+    List<Invite> findByIdGreaterThan(Integer id);
 }

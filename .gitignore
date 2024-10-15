@@ -5,3 +5,4 @@ test/
 *.properties
 *.sql
 count_rows.py
+node_modules/

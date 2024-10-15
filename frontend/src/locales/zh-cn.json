@@ -1,0 +1,46 @@
+{
+    "app": {
+      "title": "企业管理平台"
+    },
+    "breadcrumb": {
+      "home": "首页"
+    },
+    "dashboard": {
+      "welcome": "欢迎，{name}",
+      "adminDashboard": "这是管理员的仪表盘"
+    },
+    "login": {
+      "username": "用户名",
+      "password": "密码",
+      "login": "登录",
+      "loginFailed": "登录失败"
+    },
+    "header": {
+      "logout": "退出登录"
+    },
+    "pageTitle": {
+      "login": "登录 - 企业管理平台",
+      "dashboard": "仪表盘 - 企业管理平台",
+      "userManagement": "用户管理 - 企业管理平台"
+    },
+    "sidebar": {
+      "dashboard": "仪表盘",
+      "userManagement": "用户管理"
+    },
+    "unauthorized": {
+      "message": "您没有权限访问此页面。"
+    },
+    "userManagement": {
+      "addUser": "添加用户",
+      "username": "用户名",
+      "role": "角色",
+      "actions": "操作",
+      "edit": "编辑",
+      "delete": "删除",
+      "userInfo": "用户信息",
+      "save": "保存",
+      "cancel": "取消",
+      "admin": "管理员"
+    }
+  }
+  

@@ -1,68 +1,41 @@
 package com.rsmanager.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.github.cage.Cage;
+import com.github.cage.GCage;
 import org.springframework.stereotype.Service;
-import pro.fessional.kaptcha.KaptchaProducer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.UUID;
+import java.util.Base64;
 
 @Service
 public class CaptchaService {
 
-    @Autowired
-    private KaptchaProducer kaptchaProducer;
+    private final Cage cage = new GCage();
 
-    @Autowired
-    private CaptchaStore captchaStore;
-
-    // 生成验证码
-    public Captcha generateCaptcha() throws IOException {
-        String token = UUID.randomUUID().toString();
-        String text = kaptchaProducer.createText();
-        ByteArrayOutputStream imageStream = new ByteArrayOutputStream();
-        kaptchaProducer.createImage(text, imageStream);
-        byte[] imageBytes = imageStream.toByteArray();
-
-        Captcha captcha = new Captcha(token, text, imageBytes);
-        captchaStore.storeCaptcha(captcha);
-        return captcha;
+    /**
+     * 生成验证码文本
+     * @return 随机生成的验证码字符串
+     */
+    public String generateCaptchaText() {
+        return cage.getTokenGenerator().next();
     }
 
-    // 验证验证码
-    public boolean validateCaptcha(String token, String userInput) {
-        Captcha storedCaptcha = captchaStore.getCaptcha(token);
-        if (storedCaptcha == null) {
-            return false;
-        }
-        boolean isValid = storedCaptcha.getText().equalsIgnoreCase(userInput);
-        captchaStore.removeCaptcha(token); // 验证后移除验证码
-        return isValid;
-    }
-
-    // Captcha 模型
-    public static class Captcha {
-        private String token;
-        private String text;
-        private byte[] image;
-
-        public Captcha(String token, String text, byte[] image) {
-            this.token = token;
-            this.text = text;
-            this.image = image;
+    /**
+     * 生成 Base64 编码的验证码图片
+     * @param captchaText 验证码文本
+     * @return Base64 编码的图片
+     */
+    public String generateCaptchaImage(String captchaText) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try {
+            cage.draw(captchaText, outputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
 
-        public String getToken() {
-            return token;
-        }
-
-        public String getText() {
-            return text;
-        }
-
-        public byte[] getImage() {
-            return image;
-        }
+        // 将生成的图片转换为 Base64 字符串
+        return Base64.getEncoder().encodeToString(outputStream.toByteArray());
     }
 }

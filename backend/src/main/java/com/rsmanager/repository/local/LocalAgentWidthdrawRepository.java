@@ -8,6 +8,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+/**
+ * 本地数据库的 AgentWidthdraw Repository
+ */
 @Repository
 public interface LocalAgentWidthdrawRepository extends JpaRepository<AgentWidthdraw, Long> {
 
