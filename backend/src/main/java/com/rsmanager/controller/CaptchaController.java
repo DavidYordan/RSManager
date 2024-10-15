@@ -1,30 +1,40 @@
 package com.rsmanager.controller;
 
-import com.rsmanager.service.CaptchaService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-import java.util.HashMap;
-import java.util.Map;
+import com.github.cage.Cage;
+import com.github.cage.GCage;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.*;
+import jakarta.servlet.http.HttpSession;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 @RestController
 public class CaptchaController {
 
-    @Autowired
-    private CaptchaService captchaService;
+    private final Cage cage = new GCage();
 
     @GetMapping("/captcha")
-    public Map<String, String> getCaptcha() {
+    public ResponseEntity<byte[]> getCaptcha(HttpSession session) {
         // 生成验证码文本
-        String captchaText = captchaService.generateCaptchaText();
-        // 生成 Base64 编码的图片
-        String captchaImage = captchaService.generateCaptchaImage(captchaText);
+        String token = cage.getTokenGenerator().next();
+        // 将验证码文本存储在会话中
+        session.setAttribute("captcha", token);
 
-        // 返回验证码文本和图片给前端（文本通常用于在服务端校验）
-        Map<String, String> response = new HashMap<>();
-        response.put("captchaText", captchaText);
-        response.put("captchaImage", captchaImage);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            // 生成验证码图片
+            cage.draw(token, baos);
+            baos.flush();
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
 
-        return response;
+        byte[] imageBytes = baos.toByteArray();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_PNG);
+
+        return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
     }
 }

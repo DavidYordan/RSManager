@@ -9,9 +9,10 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
-public class JwtAuthenticationFilter extends GenericFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
@@ -20,12 +21,11 @@ public class JwtAuthenticationFilter extends GenericFilter {
     private CustomUserDetailsService userDetailsService;
 
     @Override
-    public void doFilter(
-        ServletRequest servletRequest,
-        ServletResponse servletResponse,
-        FilterChain chain
-    ) throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
+    protected void doFilterInternal(
+        HttpServletRequest request,
+        HttpServletResponse response,
+        FilterChain filterChain
+    ) throws ServletException, IOException {
         String token = jwtTokenUtil.getTokenFromRequest(request);
 
         if (token != null && jwtTokenUtil.validateToken(token)) {
@@ -42,6 +42,6 @@ public class JwtAuthenticationFilter extends GenericFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
-        chain.doFilter(servletRequest, servletResponse);
+        filterChain.doFilter(request, response);
     }
 }

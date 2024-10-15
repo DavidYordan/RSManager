@@ -20,11 +20,11 @@ public class BackendUser {
     @Column(name = "password")
     private String password;
 
-    // ... 其他字段 ...
+    // 其他字段
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
-    private BackendRole backendrole;
+    private BackendRole role;
 
-    // ... 其他字段 ...
+    // Lombok 的 @Getter 和 @Setter 注解会自动生成 getRole() 方法
 }

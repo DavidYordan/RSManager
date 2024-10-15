@@ -6,3 +6,4 @@ test/
 *.sql
 count_rows.py
 node_modules/
+*.code-workspace

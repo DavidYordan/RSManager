@@ -1,15 +1,21 @@
 package com.rsmanager.security;
 
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 import java.util.Date;
+import java.security.Key;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Component
 public class JwtTokenUtil {
 
-    private final String SECRET_KEY = "your_secret_key"; // 请使用安全的密钥
-    private final long EXPIRATION_TIME = 86400000; // 1 天（单位：毫秒）
+    private final String SECRET_KEY = "your-512-bit-secret-key-goes-here"; // 请使用至少 512 位的安全密钥
+
+    private final long EXPIRATION_TIME = 86400000; // 1 天（以毫秒为单位）
+
+    private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
 
     // 生成令牌
     public String generateToken(UserDetails userDetails) {
@@ -18,7 +24,7 @@ public class JwtTokenUtil {
             .claim("role", userDetails.getAuthorities().iterator().next().getAuthority())
             .setIssuedAt(new Date())
             .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-            .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+            .signWith(key, SignatureAlgorithm.HS512)
             .compact();
     }
 
@@ -29,8 +35,9 @@ public class JwtTokenUtil {
 
     // 从令牌中获取声明
     private Claims getClaimsFromToken(String token) {
-        return Jwts.parser()
-            .setSigningKey(SECRET_KEY)
+        return Jwts.parserBuilder()
+            .setSigningKey(key)
+            .build()
             .parseClaimsJws(token)
             .getBody();
     }
@@ -40,7 +47,7 @@ public class JwtTokenUtil {
         try {
             Claims claims = getClaimsFromToken(token);
             return !claims.getExpiration().before(new Date());
-        } catch (Exception e) {
+        } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
     }

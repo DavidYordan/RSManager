@@ -1,5 +1,6 @@
 # RSManager
 
+```
 frontend/
 ├── public/
 │   └── index.html
@@ -37,8 +38,9 @@ frontend/
 ├── .env.production
 ├── package.json
 └── vue.config.js
+``````
 
-
+```
 backend/
 └──src
     └── main
@@ -64,3 +66,4 @@ backend/
         │               └── AuthController.java
         └── resources
             └── application.properties
+```

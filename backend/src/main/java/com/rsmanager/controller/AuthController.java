@@ -2,15 +2,16 @@ package com.rsmanager.controller;
 
 import com.rsmanager.security.JwtTokenUtil;
 import com.rsmanager.security.CustomUserDetails;
-import com.rsmanager.model.BackendUser;
-import com.rsmanager.repository.local.BackendUserRepository;
+import com.rsmanager.model.LoginRequest;
+import com.rsmanager.model.LoginResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.*;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
+
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 public class AuthController {
@@ -21,11 +22,16 @@ public class AuthController {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private BackendUserRepository backendUserRepository;
-
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpSession session) {
+
+        // 验证验证码
+        String captchaInSession = (String) session.getAttribute("captcha");
+        if (captchaInSession == null || !captchaInSession.equalsIgnoreCase(loginRequest.getCaptchaCode())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("验证码错误");
+        }
+        // 验证后从会话中移除验证码
+        session.removeAttribute("captcha");
 
         try {
             // 认证用户
