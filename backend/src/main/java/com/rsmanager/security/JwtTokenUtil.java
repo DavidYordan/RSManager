@@ -11,7 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Component
 public class JwtTokenUtil {
 
-    private final String SECRET_KEY = "your-512-bit-secret-key-goes-here"; // 请使用至少 512 位的安全密钥
+    @Value("${jwt.SECRET_KEY}")
+    private String SECRET_KEY;
 
     private final long EXPIRATION_TIME = 86400000; // 1 天（以毫秒为单位）
 
