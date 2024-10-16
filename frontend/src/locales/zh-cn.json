@@ -10,10 +10,12 @@
       "adminDashboard": "这是管理员的仪表盘"
     },
     "login": {
-      "username": "用户名",
-      "password": "密码",
+      "captcha": "验证码",
+      "captchaError": "验证码错误",
       "login": "登录",
-      "loginFailed": "登录失败"
+      "loginFailed": "登录失败",
+      "password": "密码",
+      "username": "用户名"
     },
     "header": {
       "logout": "退出登录"

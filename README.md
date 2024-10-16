@@ -1,69 +1,127 @@
 # RSManager
 
 ```
-frontend/
-├── public/
-│   └── index.html
-├── src/
-│   ├── main.js
-│   ├── App.vue
-│   ├── router/
-│   │   └── index.js
-│   ├── store/
-│   │   └── index.js
-│   ├── views/
-│   │   ├── Dashboard.vue
-│   │   ├── Login.vue
-│   │   ├── UserManagement.vue
-│   │   ├── GroupManagement.vue
-│   │   ├── AgentManagement.vue
-│   │   ├── Reports.vue
-│   │   └── Settings.vue
-│   ├── components/
-│   │   ├── Header.vue
-│   │   ├── Sidebar.vue
-│   │   └── Breadcrumb.vue
-│   ├── assets/
-│   │   ├── styles/
-│   │   │   └── main.css
-│   │   └── images/
-│   ├── utils/
-│   │   ├── request.js
-│   │   ├── auth.js
-│   │   └── permissions.js
-│   ├── permission.js
-│   └── api/
-│       └── index.js
-├── .env.development
-├── .env.production
-├── package.json
-└── vue.config.js
-``````
-
-```
-backend/
-└──src
-    └── main
-        ├── java
-        │   └── com
-        │       └── rsmanager
-        │           ├── model
-        │           │   ├── BackendUser.java
-        │           │   └── BackendRole.java
-        │           ├── repository
-        │           │   └── local
-        │           │       ├── BackendUserRepository.java
-        │           │       └── BackendRoleRepository.java
-        │           ├── security
-        │           │   ├── CustomUserDetails.java
-        │           │   ├── CustomUserDetailsService.java
-        │           │   ├── JwtAuthenticationEntryPoint.java
-        │           │   ├── JwtAuthenticationFilter.java
-        │           │   └── JwtTokenUtil.java
-        │           ├── config
-        │           │   └── SecurityConfig.java
-        │           └── controller
-        │               └── AuthController.java
-        └── resources
-            └── application.properties
-```
+├── ./ (3290 lines)
+  ├── backend/ (2350 lines)
+    ├── src/ (2350 lines)
+      ├── main/ (2350 lines)
+        ├── java/ (2297 lines)
+          ├── com/ (2297 lines)
+            ├── rsmanager/ (2297 lines)
+              └── BackendApplication.java (14 lines)
+              ├── config/ (195 lines)
+                ├── DataSourceConfig.java (26 lines)
+                ├── JpaConfig.java (18 lines)
+                ├── LocalJpaConfig.java (40 lines)
+                ├── RemoteJpaConfig.java (40 lines)
+                └── SecurityConfig.java (71 lines)
+              ├── controller/ (151 lines)
+                ├── AuthController.java (58 lines)
+                ├── CaptchaController.java (40 lines)
+                └── UserController.java (53 lines)
+              ├── model/ (688 lines)
+                ├── AgentMoney.java (49 lines)
+                ├── AgentWidthdraw.java (40 lines)
+                ├── BackendRole.java (22 lines)
+                ├── BackendUser.java (30 lines)
+                ├── CashOut.java (76 lines)
+                ├── Invite.java (37 lines)
+                ├── InviteMoney.java (31 lines)
+                ├── LoginRequest.java (12 lines)
+                ├── LoginResponse.java (16 lines)
+                ├── SysUser.java (85 lines)
+                ├── TbUser.java (145 lines)
+                ├── UserIntegral.java (22 lines)
+                ├── UserIntegralDetails.java (43 lines)
+                ├── UserMoney.java (25 lines)
+                └── UserMoneyDetails.java (55 lines)
+              ├── repository/ (441 lines)
+                ├── local/ (218 lines)
+                  ├── BackendRoleRepository.java (9 lines)
+                  ├── BackendUserRepository.java (10 lines)
+                  ├── LocalAgentMoneyRepository.java (21 lines)
+                  ├── LocalAgentWidthdrawRepository.java (20 lines)
+                  ├── LocalCashOutRepository.java (29 lines)
+                  ├── LocalInviteMoneyRepository.java (10 lines)
+                  ├── LocalInviteRepository.java (21 lines)
+                  ├── LocalSysUserRepository.java (22 lines)
+                  ├── LocalTbUserRepository.java (14 lines)
+                  ├── LocalUserIntegralDetailsRepository.java (21 lines)
+                  ├── LocalUserIntegralRepository.java (10 lines)
+                  ├── LocalUserMoneyDetailsRepository.java (21 lines)
+                  └── LocalUserMoneyRepository.java (10 lines)
+                ├── remote/ (223 lines)
+                  ├── RemoteAgentMoneyRepository.java (22 lines)
+                  ├── RemoteAgentWidthdrawRepository.java (15 lines)
+                  ├── RemoteCashOutRepository.java (30 lines)
+                  ├── RemoteInviteMoneyRepository.java (18 lines)
+                  ├── RemoteInviteRepository.java (22 lines)
+                  ├── RemoteSysUserRepository.java (22 lines)
+                  ├── RemoteTbUserRepository.java (14 lines)
+                  ├── RemoteUserIntegralDetailsRepository.java (22 lines)
+                  ├── RemoteUserIntegralRepository.java (18 lines)
+                  ├── RemoteUserMoneyDetailsRepository.java (22 lines)
+                  └── RemoteUserMoneyRepository.java (18 lines)
+              ├── security/ (211 lines)
+                ├── CustomUserDetails.java (55 lines)
+                ├── CustomUserDetailsService.java (23 lines)
+                ├── JwtAuthenticationEntryPoint.java (21 lines)
+                ├── JwtAuthenticationFilter.java (47 lines)
+                └── JwtTokenUtil.java (65 lines)
+              ├── service/ (597 lines)
+                ├── CaptchaService.java (41 lines)
+                └── DataSyncService.java (556 lines)
+              ├── store/ (0 lines)
+        ├── resources/ (53 lines)
+          ├── application.properties (21 lines)
+          └── logback-spring.xml (32 lines)
+          ├── static/ (0 lines)
+          ├── templates/ (0 lines)
+      ├── test/ (0 lines)
+        ├── java/ (0 lines)
+          ├── com/ (0 lines)
+            ├── rsmanager/ (0 lines)
+              ├── backend/ (0 lines)
+  ├── frontend/ (940 lines)
+    └── vue.config.js (19 lines)
+    ├── src/ (921 lines)
+      ├── App.vue (16 lines)
+      ├── i18n.js (35 lines)
+      ├── main.js (47 lines)
+      └── permission.js (30 lines)
+      ├── api/ (68 lines)
+        ├── auth.js (13 lines)
+        ├── index.js (19 lines)
+        └── user.js (36 lines)
+      ├── assets/ (27 lines)
+        ├── images/ (0 lines)
+        ├── styles/ (27 lines)
+          └── main.css (27 lines)
+      ├── components/ (160 lines)
+        ├── Breadcrumb.vue (28 lines)
+        ├── Header.vue (45 lines)
+        ├── Layout.vue (47 lines)
+        └── Sidebar.vue (40 lines)
+      ├── locales/ (144 lines)
+        ├── en.json (48 lines)
+        ├── zh-cn.json (48 lines)
+        └── zh-tw.json (48 lines)
+        ├── lang/ (0 lines)
+      ├── router/ (48 lines)
+        └── index.js (48 lines)
+      ├── store/ (45 lines)
+        └── index.js (45 lines)
+      ├── utils/ (49 lines)
+        ├── auth.js (12 lines)
+        ├── permissions.js (0 lines)
+        └── request.js (37 lines)
+      ├── views/ (252 lines)
+        ├── AgentManagement.vue (0 lines)
+        ├── Dashboard.vue (51 lines)
+        ├── GroupManagement.vue (0 lines)
+        ├── Login.vue (86 lines)
+        ├── Reports.vue (0 lines)
+        ├── Settings.vue (0 lines)
+        ├── Unauthorized.vue (18 lines)
+        └── UserManagement.vue (97 lines)
+  ├── spider/ (0 lines)

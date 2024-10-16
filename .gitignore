@@ -2,8 +2,9 @@
 .vscode/
 target/
 test/
+*.code-workspace
 *.properties
 *.sql
+*.txt
 count_rows.py
 node_modules/
-*.code-workspace

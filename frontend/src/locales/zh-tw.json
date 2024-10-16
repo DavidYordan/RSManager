@@ -13,10 +13,12 @@
       "logout": "退出登入"
     },
     "login": {
-      "username": "用戶名",
-      "password": "密碼",
+      "captcha": "驗證碼",
+      "captchaError": "驗證碼錯誤",
       "login": "登入",
-      "loginFailed": "登入失敗"
+      "loginFailed": "登入失敗",
+      "password": "密碼",
+      "username": "用戶名"
     },
     "pageTitle": {
       "login": "登入 - 企業管理平台",

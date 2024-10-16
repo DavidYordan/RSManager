@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/agentmoney")  // 为所有用户相关接口设定基路径
+@RequestMapping("/agentmoney")  // 为所有用户相关接口设定基路径
 public class UserController {
 
     private List<AgentMoney> users = new ArrayList<>();

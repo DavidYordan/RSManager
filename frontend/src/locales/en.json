@@ -13,10 +13,12 @@
       "logout": "Logout"
     },
     "login": {
-      "username": "Username",
-      "password": "Password",
+      "captcha": "Captcha",
+      "captchaError": "Captcha error",
       "login": "Login",
-      "loginFailed": "Login failed"
+      "loginFailed": "Login failed",
+      "username": "Username",
+      "password": "Password"
     },
     "pageTitle": {
       "login": "Login - Enterprise Management Platform",
