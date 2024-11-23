@@ -1,0 +1,9 @@
+[submodule "RSManager-Frontend"]
+	path = RSManager-Frontend
+	url = https://github.com/DavidYordan/RSManager-Frontend.git
+[submodule "RSManager-Backend"]
+	path = RSManager-Backend
+	url = https://github.com/DavidYordan/RSManager-Backend.git
+[submodule "RSManager-Spider"]
+	path = RSManager-Spider
+	url = https://github.com/DavidYordan/RSManager-Spider.git
